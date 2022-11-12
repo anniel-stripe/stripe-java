@@ -16,12 +16,12 @@ def isReleaseBuild() {
 
 def getReleaseRepositoryUrl() {
     return hasProperty("RELEASE_REPOSITORY_URL") ? RELEASE_REPOSITORY_URL
-            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            : "https://maven.pkg.github.com/anniel-stripe/stripe-java"
 }
 
 def getSnapshotRepositoryUrl() {
     return hasProperty("SNAPSHOT_REPOSITORY_URL") ? SNAPSHOT_REPOSITORY_URL
-            : "https://oss.sonatype.org/content/repositories/snapshots/"
+            : "https://maven.pkg.github.com/anniel-stripe/stripe-java"
 }
 
 def getRepositoryUsername() {
@@ -103,13 +103,13 @@ afterEvaluate { project ->
         }
         repositories {
             maven {
-                name = "nexus"
+                name = "GitHubPackages"
                 def releasesRepoUrl = getReleaseRepositoryUrl()
                 def snapshotsRepoUrl = getSnapshotRepositoryUrl()
                 url = isReleaseBuild() ? releasesRepoUrl : snapshotsRepoUrl
                 credentials {
-                    username = getRepositoryUsername()
-                    password = getRepositoryPassword()
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
                 }
             }
         }
