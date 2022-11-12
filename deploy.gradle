@@ -25,11 +25,11 @@ def getSnapshotRepositoryUrl() {
 }
 
 def getRepositoryUsername() {
-    return hasProperty("NEXUS_USERNAME") ? NEXUS_USERNAME : ""
+    return System.getenv("GH_ARTIFACT_ACTOR") ?: ""
 }
 
 def getRepositoryPassword() {
-    return hasProperty("NEXUS_PASSWORD") ? NEXUS_PASSWORD : ""
+    return System.getenv("GH_ARTIFACT_TOKEN") ?: ""
 }
 
 afterEvaluate { project ->
@@ -108,8 +108,8 @@ afterEvaluate { project ->
                 def snapshotsRepoUrl = getSnapshotRepositoryUrl()
                 url = isReleaseBuild() ? releasesRepoUrl : snapshotsRepoUrl
                 credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
+                    username = getRepositoryUsername()
+                    password = getRepositoryPassword()
                 }
             }
         }
